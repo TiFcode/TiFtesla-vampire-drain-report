@@ -22,7 +22,12 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .controlBox{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:12px}
 .sliderRow{margin:12px 0 16px}
 .sliderRow label{display:flex;justify-content:space-between;gap:12px;font-weight:600;font-size:14px;margin-bottom:8px;color:#344054}
-input[type=range]{width:100%;accent-color:#2563eb;height:28px}
+.rangeWrap{padding:10px 4px 14px}
+input[type=range]{width:100%;accent-color:#2563eb;height:44px;cursor:pointer;touch-action:pan-y}
+input[type=range]::-webkit-slider-runnable-track{height:14px;border-radius:999px;background:linear-gradient(90deg,#dbeafe,#c4b5fd)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:34px;height:34px;border-radius:50%;background:#2563eb;border:4px solid #fff;box-shadow:0 2px 10px rgba(37,99,235,.35);margin-top:-10px}
+input[type=range]::-moz-range-track{height:14px;border-radius:999px;background:linear-gradient(90deg,#dbeafe,#c4b5fd)}
+input[type=range]::-moz-range-thumb{width:34px;height:34px;border:none;border-radius:50%;background:#2563eb;box-shadow:0 2px 10px rgba(37,99,235,.35)}
 .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:14px} th,td{border-bottom:1px solid var(--border);padding:9px 10px;text-align:left;vertical-align:top} th{background:#f8fafc;font-weight:700;position:sticky;top:0;z-index:1}
 .summary td:nth-child(n+2), .summary th:nth-child(n+2), .daily td:nth-child(n+2), .daily th:nth-child(n+2){text-align:right}
@@ -41,6 +46,10 @@ svg{width:100%;height:auto;display:block}
   .stats{grid-template-columns:1fr 1fr}
   .stat .value{font-size:1rem}
   th,td{padding:8px 7px}
+  input[type=range]{height:52px}
+  input[type=range]::-webkit-slider-thumb{width:40px;height:40px;margin-top:-13px}
+  input[type=range]::-moz-range-thumb{width:40px;height:40px}
+  .rangeWrap{padding:12px 2px 16px}
 }
 </style>
 </head>
@@ -57,11 +66,15 @@ svg{width:100%;height:auto;display:block}
     <h2>Time window</h2>
     <div class="sliderRow">
       <label for="minSlider"><span>Minimum hour</span><strong id="minHourLabel">00:00</strong></label>
-      <input id="minSlider" type="range" min="0" max="1435" step="5" value="0">
+      <div class="rangeWrap">
+        <input id="minSlider" type="range" min="0" max="1435" step="5" value="0">
+      </div>
     </div>
     <div class="sliderRow">
       <label for="maxSlider"><span>Maximum hour</span><strong id="maxHourLabel">07:00</strong></label>
-      <input id="maxSlider" type="range" min="5" max="1440" step="5" value="420">
+      <div class="rangeWrap">
+        <input id="maxSlider" type="range" min="5" max="1440" step="5" value="420">
+      </div>
     </div>
     <p class="small">Tip: on phone, slide with one finger. If the start goes past the end, the page auto-keeps at least a 5-minute gap.</p>
   </div>
