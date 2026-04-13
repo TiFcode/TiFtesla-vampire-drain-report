@@ -5,17 +5,157 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tesla Overnight Vampire Drain Report</title>
 <style>
-body{font-family:Arial,sans-serif;max-width:1100px;margin:40px auto;padding:0 16px;line-height:1.5;color:#222}
-pre{white-space:pre-wrap}
-a{color:#0b57d0}
-iframe{width:100%;height:85vh;border:1px solid #ddd;border-radius:8px}
-.note{background:#f6f8fa;padding:12px 14px;border-radius:8px;margin-bottom:16px}
+:root {--bg:#f6f8fb;--card:#ffffff;--text:#1f2937;--muted:#5b6472;--border:#d9e0ea;--accent:#2563eb;}
+body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px;}
+.container{max-width:1150px;margin:0 auto;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:0 8px 24px rgba(16,24,40,.06);margin-bottom:20px;}
+h1{margin:0 0 10px;font-size:2rem;} h2{margin:0 0 14px;font-size:1.35rem;}
+p,li{line-height:1.55;color:var(--muted);} .note{background:#eef4ff;border:1px solid #cfe0ff;color:#244;padding:12px 14px;border-radius:12px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;font-size:14px;} th,td{border-bottom:1px solid var(--border);padding:10px 12px;text-align:left;vertical-align:top;} th{background:#f8fafc;font-weight:700;position:sticky;top:0;} .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px;} .summary td:nth-child(n+2),.summary th:nth-child(n+2),.daily td:nth-child(n+2),.daily th:nth-child(n+2){text-align:right;} .small{font-size:13px;color:var(--muted);} a{color:var(--accent);text-decoration:none;} a:hover{text-decoration:underline;}
 </style>
 </head>
 <body>
-<h1>Tesla Overnight Vampire Drain vs Lowest Temperature</h1>
-<div class="note">This public page intentionally contains only aggregated day-level measurements and excludes personal identifiers.</div>
-<p><a href="README.md">Open the Markdown report</a></p>
-<iframe src="README.md"></iframe>
+<div class="container">
+  <div class="card">
+    <h1>Tesla Overnight Vampire Drain vs Lowest Temperature</h1>
+    <p>This report shows estimated overnight battery loss between <strong>00:00 and 07:00</strong>, paired with the <strong>lowest outside temperature</strong> recorded in the same window.</p>
+    <div class="note">Privacy note: this public page includes only aggregated day-level measurements. It contains no account identifiers, locations, VIN, vehicle name, credentials, or raw telemetry traces.</div>
+    <p class="small"><a href="README.md">Open the Markdown source</a></p>
+  </div>
+  <div class="card">
+    <h2>Averaged view by temperature bucket</h2>
+    <div class="table-wrap"><table class="summary"><thead><tr><th>Temperature bucket (°C)</th><th>Average vampire drain (%)</th><th>Days in bucket</th><th>Temperature range seen (°C)</th></tr></thead><tbody><tr><td>&lt;= -10</td><td>6.88</td><td>8</td><td>-13.5 to -10.0</td></tr>
+<tr><td>-10 to -5</td><td>4.90</td><td>10</td><td>-9.0 to -5.0</td></tr>
+<tr><td>-5 to 0</td><td>3.21</td><td>33</td><td>-4.5 to 0.0</td></tr>
+<tr><td>0 to 5</td><td>3.40</td><td>43</td><td>0.5 to 5.0</td></tr>
+<tr><td>5 to 10</td><td>4.25</td><td>16</td><td>6.0 to 9.5</td></tr>
+<tr><td>&gt;10</td><td>0.00</td><td>1</td><td>10.5 to 10.5</td></tr></tbody></table></div>
+  </div>
+  <div class="card">
+    <h2>Method</h2>
+    <ul>
+      <li>Only parked samples were considered.</li>
+      <li>Only timestamps from <strong>00:00 to 07:00</strong> were included.</li>
+      <li>Battery drain is estimated from battery percentage drops between consecutive parked samples.</li>
+      <li>Increases in battery percentage were ignored.</li>
+      <li>Gaps larger than 2 hours between consecutive samples were ignored for the drain sum.</li>
+      <li>Rows are sorted by lowest temperature ascending.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>Daily table</h2>
+    <div class="table-wrap"><table class="daily"><thead><tr><th>Day</th><th>Lowest temp (°C)</th><th>Vampire drain (%)</th><th>Parked samples</th></tr></thead><tbody><tr><td>2026-01-17</td><td>-13.5</td><td>11.00</td><td>9</td></tr>
+<tr><td>2026-01-20</td><td>-13.0</td><td>10.00</td><td>7</td></tr>
+<tr><td>2026-01-13</td><td>-12.5</td><td>3.00</td><td>6</td></tr>
+<tr><td>2026-01-21</td><td>-12.5</td><td>3.00</td><td>6</td></tr>
+<tr><td>2026-02-03</td><td>-12.0</td><td>11.00</td><td>16</td></tr>
+<tr><td>2026-01-14</td><td>-11.5</td><td>8.00</td><td>13</td></tr>
+<tr><td>2026-01-12</td><td>-11.0</td><td>6.00</td><td>88</td></tr>
+<tr><td>2026-02-27</td><td>-10.0</td><td>3.00</td><td>8</td></tr>
+<tr><td>2026-01-18</td><td>-9.0</td><td>0.00</td><td>2</td></tr>
+<tr><td>2025-12-26</td><td>-7.5</td><td>2.00</td><td>84</td></tr>
+<tr><td>2026-01-19</td><td>-7.5</td><td>8.00</td><td>8</td></tr>
+<tr><td>2026-02-02</td><td>-7.5</td><td>5.00</td><td>10</td></tr>
+<tr><td>2026-02-19</td><td>-7.0</td><td>2.00</td><td>32</td></tr>
+<tr><td>2026-03-11</td><td>-6.5</td><td>11.00</td><td>55</td></tr>
+<tr><td>2026-02-24</td><td>-6.0</td><td>3.00</td><td>6</td></tr>
+<tr><td>2026-01-09</td><td>-5.5</td><td>8.00</td><td>7</td></tr>
+<tr><td>2026-01-15</td><td>-5.0</td><td>4.00</td><td>17</td></tr>
+<tr><td>2026-01-22</td><td>-5.0</td><td>6.00</td><td>158</td></tr>
+<tr><td>2026-01-11</td><td>-4.5</td><td>0.00</td><td>2</td></tr>
+<tr><td>2026-01-23</td><td>-4.5</td><td>3.00</td><td>81</td></tr>
+<tr><td>2026-02-10</td><td>-4.5</td><td>6.00</td><td>6</td></tr>
+<tr><td>2025-12-31</td><td>-4.0</td><td>0.00</td><td>2</td></tr>
+<tr><td>2026-01-24</td><td>-4.0</td><td>6.00</td><td>82</td></tr>
+<tr><td>2026-02-01</td><td>-4.0</td><td>0.00</td><td>2</td></tr>
+<tr><td>2026-02-04</td><td>-4.0</td><td>7.00</td><td>9</td></tr>
+<tr><td>2026-02-23</td><td>-4.0</td><td>5.00</td><td>11</td></tr>
+<tr><td>2026-02-28</td><td>-4.0</td><td>6.00</td><td>22</td></tr>
+<tr><td>2026-03-02</td><td>-4.0</td><td>6.00</td><td>12</td></tr>
+<tr><td>2026-02-12</td><td>-3.5</td><td>4.00</td><td>29</td></tr>
+<tr><td>2026-03-16</td><td>-3.5</td><td>4.00</td><td>7</td></tr>
+<tr><td>2026-01-16</td><td>-3.0</td><td>1.00</td><td>7</td></tr>
+<tr><td>2026-02-20</td><td>-3.0</td><td>4.00</td><td>7</td></tr>
+<tr><td>2025-12-27</td><td>-2.5</td><td>2.00</td><td>21</td></tr>
+<tr><td>2026-02-22</td><td>-2.0</td><td>0.00</td><td>2</td></tr>
+<tr><td>2026-02-25</td><td>-2.0</td><td>1.00</td><td>7</td></tr>
+<tr><td>2026-03-01</td><td>-2.0</td><td>0.00</td><td>2</td></tr>
+<tr><td>2026-03-03</td><td>-1.5</td><td>5.00</td><td>7</td></tr>
+<tr><td>2025-12-16</td><td>-1.0</td><td>5.00</td><td>6</td></tr>
+<tr><td>2025-12-29</td><td>-1.0</td><td>1.00</td><td>3</td></tr>
+<tr><td>2025-12-17</td><td>-0.5</td><td>4.00</td><td>62</td></tr>
+<tr><td>2025-12-19</td><td>-0.5</td><td>3.00</td><td>7</td></tr>
+<tr><td>2026-02-09</td><td>-0.5</td><td>5.00</td><td>6</td></tr>
+<tr><td>2026-02-11</td><td>-0.5</td><td>5.00</td><td>7</td></tr>
+<tr><td>2026-02-18</td><td>-0.5</td><td>1.00</td><td>6</td></tr>
+<tr><td>2026-03-04</td><td>-0.5</td><td>5.00</td><td>6</td></tr>
+<tr><td>2025-12-15</td><td>0.0</td><td>4.00</td><td>7</td></tr>
+<tr><td>2025-12-18</td><td>0.0</td><td>8.00</td><td>9</td></tr>
+<tr><td>2026-01-05</td><td>0.0</td><td>1.00</td><td>3</td></tr>
+<tr><td>2026-01-25</td><td>0.0</td><td>2.00</td><td>84</td></tr>
+<tr><td>2026-01-31</td><td>0.0</td><td>0.00</td><td>5</td></tr>
+<tr><td>2026-02-26</td><td>0.0</td><td>2.00</td><td>6</td></tr>
+<tr><td>2025-12-23</td><td>0.5</td><td>5.00</td><td>6</td></tr>
+<tr><td>2026-01-08</td><td>0.5</td><td>4.00</td><td>30</td></tr>
+<tr><td>2026-01-29</td><td>0.5</td><td>6.00</td><td>80</td></tr>
+<tr><td>2026-02-13</td><td>0.5</td><td>5.00</td><td>6</td></tr>
+<tr><td>2026-03-09</td><td>0.5</td><td>2.00</td><td>6</td></tr>
+<tr><td>2026-03-10</td><td>0.5</td><td>4.00</td><td>6</td></tr>
+<tr><td>2025-12-11</td><td>1.0</td><td>3.00</td><td>37</td></tr>
+<tr><td>2026-01-26</td><td>1.0</td><td>0.00</td><td>6</td></tr>
+<tr><td>2026-02-07</td><td>1.0</td><td>13.00</td><td>29</td></tr>
+<tr><td>2026-03-07</td><td>1.0</td><td>0.00</td><td>2</td></tr>
+<tr><td>2026-03-13</td><td>1.0</td><td>4.00</td><td>6</td></tr>
+<tr><td>2026-02-17</td><td>1.5</td><td>4.00</td><td>14</td></tr>
+<tr><td>2026-03-08</td><td>1.5</td><td>9.00</td><td>5</td></tr>
+<tr><td>2026-02-05</td><td>2.0</td><td>1.00</td><td>7</td></tr>
+<tr><td>2026-03-17</td><td>2.0</td><td>5.00</td><td>5</td></tr>
+<tr><td>2025-12-07</td><td>2.5</td><td>1.00</td><td>82</td></tr>
+<tr><td>2025-12-14</td><td>2.5</td><td>0.00</td><td>2</td></tr>
+<tr><td>2025-12-24</td><td>2.5</td><td>8.00</td><td>20</td></tr>
+<tr><td>2026-01-27</td><td>2.5</td><td>2.00</td><td>80</td></tr>
+<tr><td>2026-02-16</td><td>2.5</td><td>1.00</td><td>5</td></tr>
+<tr><td>2026-03-06</td><td>2.5</td><td>5.00</td><td>80</td></tr>
+<tr><td>2025-12-12</td><td>3.0</td><td>0.00</td><td>16</td></tr>
+<tr><td>2025-12-21</td><td>3.0</td><td>0.00</td><td>2</td></tr>
+<tr><td>2025-12-22</td><td>3.0</td><td>4.00</td><td>6</td></tr>
+<tr><td>2026-01-28</td><td>3.0</td><td>5.00</td><td>78</td></tr>
+<tr><td>2026-01-30</td><td>3.0</td><td>3.00</td><td>12</td></tr>
+<tr><td>2026-03-12</td><td>3.0</td><td>5.00</td><td>34</td></tr>
+<tr><td>2026-03-15</td><td>3.0</td><td>0.00</td><td>2</td></tr>
+<tr><td>2025-12-09</td><td>3.5</td><td>4.00</td><td>79</td></tr>
+<tr><td>2025-12-10</td><td>3.5</td><td>7.00</td><td>77</td></tr>
+<tr><td>2026-03-18</td><td>3.5</td><td>3.00</td><td>9</td></tr>
+<tr><td>2026-03-26</td><td>3.5</td><td>4.00</td><td>6</td></tr>
+<tr><td>2025-12-06</td><td>4.0</td><td>2.00</td><td>82</td></tr>
+<tr><td>2025-12-08</td><td>4.0</td><td>3.00</td><td>80</td></tr>
+<tr><td>2026-02-06</td><td>4.5</td><td>1.00</td><td>4</td></tr>
+<tr><td>2026-02-08</td><td>4.5</td><td>0.00</td><td>2</td></tr>
+<tr><td>2026-03-05</td><td>4.5</td><td>4.00</td><td>5</td></tr>
+<tr><td>2026-02-15</td><td>5.0</td><td>0.00</td><td>2</td></tr>
+<tr><td>2026-03-19</td><td>5.0</td><td>5.00</td><td>22</td></tr>
+<tr><td>2026-03-20</td><td>5.0</td><td>1.00</td><td>7</td></tr>
+<tr><td>2026-03-24</td><td>5.0</td><td>4.00</td><td>6</td></tr>
+<tr><td>2026-04-12</td><td>5.0</td><td>8.00</td><td>11</td></tr>
+<tr><td>2026-04-13</td><td>5.0</td><td>1.00</td><td>49</td></tr>
+<tr><td>2026-04-07</td><td>6.0</td><td>6.00</td><td>20</td></tr>
+<tr><td>2026-04-08</td><td>6.0</td><td>6.00</td><td>14</td></tr>
+<tr><td>2026-04-09</td><td>6.0</td><td>6.00</td><td>7</td></tr>
+<tr><td>2026-03-27</td><td>6.5</td><td>1.00</td><td>7</td></tr>
+<tr><td>2026-03-31</td><td>6.5</td><td>6.00</td><td>8</td></tr>
+<tr><td>2026-04-11</td><td>6.5</td><td>0.00</td><td>2</td></tr>
+<tr><td>2026-03-23</td><td>7.0</td><td>3.00</td><td>6</td></tr>
+<tr><td>2026-04-05</td><td>7.5</td><td>0.00</td><td>2</td></tr>
+<tr><td>2026-03-22</td><td>8.0</td><td>0.00</td><td>2</td></tr>
+<tr><td>2026-03-25</td><td>8.0</td><td>3.00</td><td>13</td></tr>
+<tr><td>2026-04-02</td><td>8.0</td><td>7.00</td><td>79</td></tr>
+<tr><td>2026-04-06</td><td>8.0</td><td>5.00</td><td>21</td></tr>
+<tr><td>2026-03-29</td><td>8.5</td><td>6.00</td><td>8</td></tr>
+<tr><td>2026-04-03</td><td>9.0</td><td>5.00</td><td>8</td></tr>
+<tr><td>2026-03-30</td><td>9.5</td><td>7.00</td><td>10</td></tr>
+<tr><td>2026-04-01</td><td>9.5</td><td>7.00</td><td>15</td></tr>
+<tr><td>2026-04-04</td><td>10.5</td><td>0.00</td><td>2</td></tr></tbody></table></div>
+  </div>
+</div>
 </body>
 </html>

@@ -139,4 +139,3 @@ Privacy note: this page includes only aggregated day-level measurements. It cont
 | 2026-03-30 | 9.5 | 7.00 | 10 |
 | 2026-04-01 | 9.5 | 7.00 | 15 |
 | 2026-04-04 | 10.5 | 0.00 | 2 |
-| (111 rows) | None | None | None |
