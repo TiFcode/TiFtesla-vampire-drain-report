@@ -4,6 +4,17 @@ This report shows estimated overnight battery loss between **00:00 and 07:00**, 
 
 Privacy note: this page includes only aggregated day-level measurements. It contains no account identifiers, locations, VIN, vehicle name, credentials, or raw telemetry traces.
 
+## Averaged view by temperature bucket
+
+| Temperature bucket (°C) | Average vampire drain (%) | Days in bucket | Temperature range seen (°C) |
+|---|---:|---:|---:|
+| <= -10 | 6.88 | 8 | -13.5 to -10.0 |
+| -10 to -5 | 4.90 | 10 | -9.0 to -5.0 |
+| -5 to 0 | 3.21 | 33 | -4.5 to 0.0 |
+| 0 to 5 | 3.40 | 43 | 0.5 to 5.0 |
+| 5 to 10 | 4.25 | 16 | 6.0 to 9.5 |
+| >10 | 0.00 | 1 | 10.5 to 10.5 |
+
 ## Method
 
 - Only parked samples were considered.
@@ -13,7 +24,7 @@ Privacy note: this page includes only aggregated day-level measurements. It cont
 - Gaps larger than 2 hours between consecutive samples were ignored for the drain sum.
 - Rows are sorted by lowest temperature ascending.
 
-## Table
+## Daily table
 
 | Day | Lowest temp (°C) | Vampire drain (%) | Parked samples |
 |---|---:|---:|---:|
@@ -129,5 +140,3 @@ Privacy note: this page includes only aggregated day-level measurements. It cont
 | 2026-04-01 | 9.5 | 7.00 | 15 |
 | 2026-04-04 | 10.5 | 0.00 | 2 |
 | (111 rows) | None | None | None |
-
-_Generated from TeslaMate data on (111 rows) reporting set._
