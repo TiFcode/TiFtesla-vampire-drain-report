@@ -5,13 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tesla Overnight Vampire Drain Report</title>
 <style>
-:root {--bg:#f6f8fb;--card:#ffffff;--text:#1f2937;--muted:#5b6472;--border:#d9e0ea;--accent:#2563eb;}
+:root {--bg:#f6f8fb;--card:#ffffff;--text:#1f2937;--muted:#5b6472;--border:#d9e0ea;--accent:#2563eb;--accent2:#7c3aed;}
 body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px;}
 .container{max-width:1150px;margin:0 auto;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:0 8px 24px rgba(16,24,40,.06);margin-bottom:20px;}
 h1{margin:0 0 10px;font-size:2rem;} h2{margin:0 0 14px;font-size:1.35rem;}
 p,li{line-height:1.55;color:var(--muted);} .note{background:#eef4ff;border:1px solid #cfe0ff;color:#244;padding:12px 14px;border-radius:12px;margin:14px 0;}
 table{width:100%;border-collapse:collapse;font-size:14px;} th,td{border-bottom:1px solid var(--border);padding:10px 12px;text-align:left;vertical-align:top;} th{background:#f8fafc;font-weight:700;position:sticky;top:0;} .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px;} .summary td:nth-child(n+2),.summary th:nth-child(n+2),.daily td:nth-child(n+2),.daily th:nth-child(n+2){text-align:right;} .small{font-size:13px;color:var(--muted);} a{color:var(--accent);text-decoration:none;} a:hover{text-decoration:underline;}
+.chart-wrap{padding:8px 0 4px;}
+svg{width:100%;height:auto;display:block;}
+.axis{stroke:#94a3b8;stroke-width:1;} .grid{stroke:#e2e8f0;stroke-width:1;} .bar{fill:url(#barGrad);rx:8;ry:8;} .label{font-size:12px;fill:#475569;} .value{font-size:12px;font-weight:700;fill:#111827;} .subtle{font-size:12px;fill:#64748b;}
 </style>
 </head>
 <body>
@@ -24,6 +27,9 @@ table{width:100%;border-collapse:collapse;font-size:14px;} th,td{border-bottom:1
   </div>
   <div class="card">
     <h2>Averaged view by temperature bucket</h2>
+    <div class="chart-wrap">
+      <svg id="bucketChart" viewBox="0 0 980 360" aria-label="Average vampire drain by temperature bucket"></svg>
+    </div>
     <div class="table-wrap"><table class="summary"><thead><tr><th>Temperature bucket (°C)</th><th>Average vampire drain (%)</th><th>Days in bucket</th><th>Temperature range seen (°C)</th></tr></thead><tbody><tr><td>&lt;= -10</td><td>6.88</td><td>8</td><td>-13.5 to -10.0</td></tr>
 <tr><td>-10 to -5</td><td>4.90</td><td>10</td><td>-9.0 to -5.0</td></tr>
 <tr><td>-5 to 0</td><td>3.21</td><td>33</td><td>-4.5 to 0.0</td></tr>
@@ -157,5 +163,47 @@ table{width:100%;border-collapse:collapse;font-size:14px;} th,td{border-bottom:1
 <tr><td>2026-04-04</td><td>10.5</td><td>0.00</td><td>2</td></tr></tbody></table></div>
   </div>
 </div>
+<script>
+const labels = ["<= -10", "-10 to -5", "-5 to 0", "0 to 5", "5 to 10", ">10"];
+const values = [6.88, 4.9, 3.21, 3.4, 4.25, 0.0];
+const days = [8, 10, 33, 43, 16, 1];
+const svg = document.getElementById('bucketChart');
+const W = 980, H = 360, ml = 60, mr = 24, mt = 24, mb = 70;
+const cw = W - ml - mr, ch = H - mt - mb;
+const max = Math.max(...values, 8);
+const ns = 'http://www.w3.org/2000/svg';
+function add(tag, attrs, text) {
+  const el = document.createElementNS(ns, tag);
+  for (const [k,v] of Object.entries(attrs || {})) el.setAttribute(k, v);
+  if (text != null) el.textContent = text;
+  svg.appendChild(el);
+  return el;
+}
+const defs = add('defs');
+const grad = document.createElementNS(ns, 'linearGradient');
+grad.setAttribute('id','barGrad'); grad.setAttribute('x1','0'); grad.setAttribute('x2','0'); grad.setAttribute('y1','0'); grad.setAttribute('y2','1');
+const s1 = document.createElementNS(ns, 'stop'); s1.setAttribute('offset','0%'); s1.setAttribute('stop-color','#2563eb');
+const s2 = document.createElementNS(ns, 'stop'); s2.setAttribute('offset','100%'); s2.setAttribute('stop-color','#7c3aed');
+grad.appendChild(s1); grad.appendChild(s2); defs.appendChild(grad);
+for (let i=0;i<=4;i++) {
+  const val = max * i / 4;
+  const y = mt + ch - (val/max)*ch;
+  add('line', {x1: ml, y1: y, x2: W-mr, y2: y, class: 'grid'});
+  add('text', {x: ml-10, y: y+4, 'text-anchor':'end', class: 'label'}, val.toFixed(1) + '%');
+}
+add('line', {x1: ml, y1: mt, x2: ml, y2: H-mb, class:'axis'});
+add('line', {x1: ml, y1: H-mb, x2: W-mr, y2: H-mb, class:'axis'});
+const slot = cw / labels.length;
+const barW = Math.min(90, slot * 0.56);
+labels.forEach((label, i) => {
+  const x = ml + i*slot + (slot-barW)/2;
+  const h = (values[i]/max)*ch;
+  const y = mt + ch - h;
+  add('rect', {x, y, width: barW, height: h, class: 'bar'});
+  add('text', {x: x + barW/2, y: y - 8, 'text-anchor':'middle', class:'value'}, values[i].toFixed(2) + '%');
+  add('text', {x: x + barW/2, y: H - mb + 20, 'text-anchor':'middle', class:'label'}, label);
+  add('text', {x: x + barW/2, y: H - mb + 38, 'text-anchor':'middle', class:'subtle'}, days[i] + ' day' + (days[i]===1?'':'s'));
+});
+</script>
 </body>
 </html>
